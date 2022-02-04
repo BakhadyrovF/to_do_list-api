@@ -32,7 +32,14 @@ class TaskController extends Controller
     {
         $data = $request->validated();
 
-        $task = Task::create($data);
+        $completed = ($data["completed"]) ? 1 : 0;
+        $parent_id = $data["parent_id"] ?? null;
+
+        $task = Task::create([
+            "title" => $data["title"],
+            "completed" => $completed,
+            "parent_id" => $parent_id
+        ]);
 
         return response($task, 201);
 
@@ -90,7 +97,8 @@ class TaskController extends Controller
     public function search()
     {
 
-
+        // BullShit way to do this
+        //But idk how I can do this with another way
         if(isset($_GET["search"]) && isset($_GET["completed"]))
         {
             $tasks = Task::where("title", "LIKE", "%".$_GET["search"]."%")->where("completed", $_GET["completed"])->get();
