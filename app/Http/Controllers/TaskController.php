@@ -64,7 +64,14 @@ class TaskController extends Controller
         $data = $request->validated();
         $task = Task::findOrFail($id);
 
-        $task->update($data);
+        $completed = ($data["completed"]) ? 1 : 0;
+        $parent_id = $data["parent_id"] ?? null;
+
+        $task->update([
+            "title" => $data["title"],
+            "completed" => $completed,
+            "parent_id" => $parent_id
+        ]);
 
         return response($task, 202);
 
